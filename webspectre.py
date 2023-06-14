@@ -26,7 +26,7 @@ class WebSpectreSpider(scrapy.Spider):
         html_selector = scrapy.Selector(response=response, type="html")
         
         # output raw html to text file
-        with open("output.html", "w") as f:
+        with open("outputs/output.html", "w") as f:
             f.write(response.body.decode("utf-8"))
 
         # call the get_unique_tags function and pass the html_selector object
@@ -39,10 +39,10 @@ class WebSpectreSpider(scrapy.Spider):
         print("Max depth of the tree:", get_max_depth(html_selector))
         
         # output full xpath list to text file
-        with open("xpath_list.txt", "w") as f:
+        with open("outputs/xpath_list.txt", "w") as f:
             f.write(str(get_full_xpath_list(html_selector)))
         # output full xpath list to text file with line endings
-        with open("xpath_list_line_endings.txt", "w") as f:
+        with open("outputs/xpath_list_line_endings.txt", "w") as f:
             for item in get_full_xpath_list(html_selector):
                 f.write("%s\n" % item)
         # return the response object
