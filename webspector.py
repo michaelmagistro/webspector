@@ -1,7 +1,6 @@
 import scrapy
 
-
-class WebspectorSpider(scrapy.Spider):
+class MySpider(scrapy.Spider):
     name = "webspector"
 
     def start_requests(self):
@@ -18,28 +17,32 @@ class WebspectorSpider(scrapy.Spider):
         yield scrapy.Request(url=url, callback=self.parse)
 
     def parse(self, response):
-        # Print the URL being visited
-        # self.logger.info("Visited URL: %s", response.url)
+        # create a Selector object from the response body
+        html_selector = scrapy.Selector(response=response, type="html")
 
-        # Print the HTML content
-        # self.logger.info("HTML Content:\n%s", response.text)
+        # call the get_unique_tags function and pass the html_selector object
+        unique_tags = get_unique_tags(html_selector)
+        print(unique_tags)
+        # print the sum of the values in the unique_tags dictionary
+        print("Total number of tags:", get_iterable_sum(unique_tags.values()))
 
-        # Print the title of the page
+def get_unique_tags(html):
+    tags = []
+    # loop through all html tags and print only the tag name
+    for tag in html.xpath('//*'):
+        tags.append(tag.root.tag)
 
-        # output the response text to a text file
-        with open('output.txt', 'w') as f:
-            f.write(response.css('title::text').get() + '\n')
-            # for p in response.css('p'):
-            #     f.write(p.get() + '\n')
-            # create an array for all html tags
-            tags = []
-            # loop through all html tags and print only the tag name
-            for tag in response.xpath('//*'):
-                tags.append(tag.root.tag)
-            # remove duplicates from the array
-            unique_tags = list(dict.fromkeys(tags))
-            # for each of the unique tags, print the number of times it appears in the html
-            for tag in unique_tags:
-                f.write(tag + ": " + str(tags.count(tag)) + '\n')
-            # print the tags to the console
-            print('\n'.join(tags))
+    # remove duplicates from the array
+    unique_tags = dict.fromkeys(tags)
+
+    # set unique_tags dictionary values to tags.count(tag) to get the number of times the tag appears
+    for tag in unique_tags:
+        unique_tags[tag] = tags.count(tag)
+
+    return unique_tags
+
+def get_iterable_sum(iterable):
+    total = 0
+    for i in iterable:
+        total += i
+    return total
