@@ -26,7 +26,7 @@ If using VSCode, here are the default settings I have for `.vscode` folder in th
             "type": "python",
             "request": "launch",
             "module": "scrapy",
-            "python": "${workspaceFolder}\\..\\..\\pvenv\\webspector\\Scripts\\python.exe",
+            "python": "${workspaceFolder}\\..\\..\\pvenv\\webspectre\\Scripts\\python.exe",
             "args": [
                 "runspider",
                 "${file}"
@@ -39,7 +39,7 @@ If using VSCode, here are the default settings I have for `.vscode` folder in th
         //     "request": "launch",
         //     "program": "${file}",
         //     "console": "integratedTerminal",
-        // "python": "${workspaceFolder}\\..\\..\\pvenv\\webspector\\Scripts\\python.exe",
+        // "python": "${workspaceFolder}\\..\\..\\pvenv\\webspectre\\Scripts\\python.exe",
         //     "justMyCode": true
         // },
     ]

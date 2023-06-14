@@ -3,7 +3,7 @@ from xpath_utils import get_full_xpath_list, get_max_depth, get_unique_tags_coun
 import scrapy
 
 class MySpider(scrapy.Spider):
-    name = "webspector"
+    name = "webspectre"
 
     def start_requests(self):
         # Get the URL from the command line
