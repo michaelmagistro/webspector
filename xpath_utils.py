@@ -11,7 +11,12 @@ def get_full_xpath_list(html):
         text = tag.xpath('text()').extract_first()
         # get the xpath of the tag
         xpath = tag.root.getroottree().getpath(tag.root)
-        xpath_list.append([tag_name, depth, text, xpath])
+        # get the class of the tag if any
+        class_name = tag.xpath('@class')
+        # get the id of the tag if any
+        id_name = tag.xpath('@id')
+        # populate the list
+        xpath_list.append([tag_name, depth, text, class_name, id_name, xpath])
         i =+ 1
     return xpath_list
 
