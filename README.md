@@ -12,13 +12,14 @@ Download a zip of the repo & unzip. Run webspectre.py using Python 3. Ensure you
 
 If using VSCode, here are the default settings I have for `.vscode` folder in the working directory (be sure to update the folder paths to your system). These settings are mainly to help with being able to run the VSCode debugger with Scrapy.
 
+## Testing
+
+The unit tests are using `pytest`. Just cd into the repo & run pytest to execute the unit tests.
+
 ### Launch.json
 
 ```json
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
         {
@@ -33,15 +34,6 @@ If using VSCode, here are the default settings I have for `.vscode` folder in th
             ],
             "console": "integratedTerminal"
         },
-        // {
-        //     "name": "Python: Current File",
-        //     "type": "python",
-        //     "request": "launch",
-        //     "program": "${file}",
-        //     "console": "integratedTerminal",
-        // "python": "${workspaceFolder}\\..\\..\\pvenv\\webspectre\\Scripts\\python.exe",
-        //     "justMyCode": true
-        // },
     ]
 }
 ```
