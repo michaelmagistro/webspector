@@ -1,12 +1,12 @@
 def get_full_xpath_list(html):
     # get the full xpath of each tag in the html tree
-    xpath_list = [['NAME','DEPTH','TEXT','XPATH','CLASS','ID']]
+    xpath_list = ['NAME','DEPTH','TEXT','XPATH','CLASS','ID']
     i = 0
     for tag in html.xpath('//*'):
         # get the tag name
         tag_name = tag.root.tag
         # get the depth of the tag
-        depth = tag.root.getroottree().getpath(tag.root).count("/")
+        depth: int = tag.root.getroottree().getpath(tag.root).count("/")
         # get the text of the tag
         text = tag.xpath('text()').extract_first()
         # get the xpath of the tag
@@ -16,7 +16,8 @@ def get_full_xpath_list(html):
         # get the id of the tag if any
         id_name = tag.xpath('@id')
         # populate the list
-        xpath_list.append([tag_name, str(depth), text, class_name, id_name, xpath])
+        # xpath_list.append([tag_name, depth, text, class_name, id_name, xpath])
+        xpath_list.append(['test', 'test', 'test', 'test', 'test', 'test'])
         i += 1
     return xpath_list
 
