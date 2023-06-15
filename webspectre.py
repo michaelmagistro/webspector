@@ -26,7 +26,7 @@ class WebSpectreSpider(scrapy.Spider):
         html_selector = scrapy.Selector(response=response, type="html")
         
         # output raw html to text file
-        with open("outputs/output.html", "w") as f:
+        with open("outputs/raw.html", "w+") as f:
             f.write(response.body.decode("utf-8"))
 
         # call the get_unique_tags function and pass the html_selector object
@@ -45,7 +45,6 @@ class WebSpectreSpider(scrapy.Spider):
         with open("outputs/xpath_list_line_endings.txt", "w") as f:
             for item in get_full_xpath_list(html_selector):
                 f.write("%s\n" % item)
-        # return the response object
 
         # extract data from the response
         title = response.css("title::text").get()
@@ -62,3 +61,8 @@ class WebSpectreSpider(scrapy.Spider):
         )
 
         return http_response
+    
+    # wait 5 seconds before closing the spider
+    custom_settings = {
+        "CLOSESPIDER_TIMEOUT": 5
+    }

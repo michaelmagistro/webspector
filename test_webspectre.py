@@ -1,16 +1,28 @@
-import unittest
 from scrapy.http import HtmlResponse
 from webspectre import WebSpectreSpider
 
-class TestWebspectre(unittest.TestCase):
-    def setUp(self) -> None:
-        self.spider = WebSpectreSpider()
-    
-    def test_parse(self):
-        # create a mock response object
-        response = HtmlResponse(url="https://www.example.com", body=open("testfiles/test.html", "rb").read())
+def create_mock_response():
+    # create a mock response object
+    return HtmlResponse(url="https://www.example.com", body=open("testfiles/test.html", "rb").read())
 
-        # call the parse method
-        result = self.spider.parse(response)
+class TestWebspectre:
+    def setup_method(self):
+        self.spider = WebSpectreSpider()
+        self.result = self.spider.parse(create_mock_response())
+
+    def test_status(self):
         # check that the result is html response 200
-        self.assertEqual(result.status, 200)
+        assert self.result.status == 200
+
+    def test_html_element_count(self):
+        # check that the html elements in the selector list is equal to the number of elements in the test html file
+        assert len(self.result.css("html")) == 1
+
+    def test_div_element_count(self):
+        # check that the div elements in the selector list is equal to the number of elements in the test html file
+        assert len(self.result.css("div")) == 13
+
+    def test_total_element_count(self):
+        # check that the total elements in the selector list is equal to the number of elements in the test html file
+        print(self.result.css("*"))
+        assert len(self.result.css("*")) == 89
