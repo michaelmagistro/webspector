@@ -11,7 +11,7 @@ class WebSpectreSpider(scrapy.Spider):
         # If no URL is provided, use Google
         # loop to ask user again until they provide a url which includes the scheme
         while True:
-            url = input("Enter a URL: ") or "https://www.msn.com"
+            url = input("Enter a URL: ") or "https://www.google.com"
             if url.startswith("http://") or url.startswith("https://"):
                 break
             print("Please enter a URL which includes the scheme (http:// or https://)")
@@ -28,6 +28,20 @@ class WebSpectreSpider(scrapy.Spider):
         # output raw html to text file
         with open("outputs/raw.html", "w+") as f:
             f.write(response.body.decode("utf-8"))
+
+        # create the report.html file
+        with open("outputs/report.html", "w+") as f:
+            # write the html header
+            f.write("<!DOCTYPE html>\n<html>\n<head>\n<title>WebSpectre Report</title>\n</head>\n<body>\n")
+            # write the html title
+            f.write("<h1>WebSpectre Report</h1>\n")
+            # write the url
+            f.write("<h2>URL: " + response.url + "</h2>\n")
+            # write the html body
+            f.write("<h2>HTML Body:</h2>\n")
+            f.write("<pre>" + response.body.decode("utf-8") + "</pre>\n")
+            # write the html footer
+            f.write("</body>\n</html>")
 
         # call the get_unique_tags function and pass the html_selector object
         print("Unique tags by count:\n", get_unique_tags_count(html_selector))
