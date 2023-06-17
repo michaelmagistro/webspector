@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Scraper</title>
+</head>
+<body>
+    Click <a href="{{ url_for('index') }}">here</a> to go back.
+    <p>Today's date is {{ current_date }}</p>
+    <!-- return the url the user inputted from the index page -->
+    <p>You entered the url: {{ url }}</p>
+    <table>
+        <thead>
+            <tr>
+                <th>Total Elements / Xpaths</th>
+                <th>Column 2</th>
+                <th>Column 3</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in data %}
+            <tr>
+                <td>{{ row.column1 }}</td>
+                <td>{{ row.column2 }}</td>
+                <td>{{ row.column3 }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+</body>
+</html>

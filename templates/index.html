@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Run Scraper</title>
+</head>
+<body>
+    <h1>Run Scraper</h1>
+    <p>Run the Python Scraper to get a report of the raw HTML content of a webpage.</p>
+    <p>Enter a URL to receive a report on the raw html content of that page. <br> (Leave it blank to simply scrape Google.com)</p>
+    <!-- Add a box for the user to input url -->
+    <form action="{{ url_for('run_scraper') }}" method="POST">
+        <input type="text" name="url" placeholder="Enter URL" value="https://google.com" style="opacity: 0.5;">
+        <!-- store the input from the user in a var -->
+        <button type="submit">Run Scraper</button>
+    </form>
+</body>
+</html>

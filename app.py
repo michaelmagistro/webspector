@@ -1,23 +1,20 @@
-from flask import Flask
-app = Flask(__name__)
-import webspectre
-app.debug = True # debug mode
-app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0 # debug mode
-
-from flask import Flask
-from scrapy.crawler import CrawlerProcess
-from webspectre.spiders import myspider
+from flask import Flask, render_template, request
+from datetime import date
+import subprocess
 
 app = Flask(__name__)
-app.debug = True
-app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 
-@app.route("/")
-def webspectre_route():
-    process = CrawlerProcess()
-    process.crawl(myspider.MySpider)
-    process.start()
-    return "Scraping complete!"
+@app.route('/')
+def index():
+    return render_template('index.html')
 
-if __name__ == "__main__":
+@app.route('/run-scraper', methods=['POST'])
+def run_scraper():
+    # Run the webspectre.py scraper using subprocess
+    current_date = date.today()
+    url = request.form['url']
+    subprocess.run(['python', 'webspectre.py', url])
+    return render_template('run-scraper.html', current_date=current_date, url=url)
+
+if __name__ == '__main__':
     app.run()
