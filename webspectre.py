@@ -2,9 +2,12 @@ from general_utils import get_sum
 from xpath_utils import get_full_xpath_list, get_max_depth, get_unique_tags_count
 import scrapy
 from scrapy.http import HtmlResponse
+from globals import webspectre_selector_list
 
 class WebSpectreSpider(scrapy.Spider):
     name = "webspectre"
+    # set selector list attribute to empty list
+    selector_list = []
 
     def start_requests(self):
         # Get the URL from the command line
@@ -24,6 +27,7 @@ class WebSpectreSpider(scrapy.Spider):
         
         # create a Selector object from the response body
         html_selector = scrapy.Selector(response=response, type="html")
+        webspectre_selector_list = html_selector
         
         # output raw html to text file
         with open("outputs/raw.html", "w+") as f:
@@ -59,6 +63,9 @@ class WebSpectreSpider(scrapy.Spider):
         with open("outputs/xpath_list_line_endings.txt", "w") as f:
             for item in get_full_xpath_list(html_selector):
                 f.write("%s\n" % item)
+        # output the url to text file
+        with open("outputs/url.txt", "w") as f:
+            f.write(response.url)
 
         # extract data from the response
         title = response.css("title::text").get()
@@ -73,7 +80,7 @@ class WebSpectreSpider(scrapy.Spider):
             request=response.request,
             flags=response.flags,
         )
-
+        self.selector_list = html_selector
         return http_response
     
     # wait 5 seconds before closing the spider

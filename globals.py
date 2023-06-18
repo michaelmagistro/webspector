@@ -1,0 +1,1 @@
+webspectre_selector_list = None
