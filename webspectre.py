@@ -2,7 +2,7 @@ from general_utils import get_sum
 from xpath_utils import get_full_xpath_list, get_max_depth, get_unique_tags_count
 import scrapy
 from scrapy.http import HtmlResponse
-from globals import webspectre_selector_list
+import app as a
 
 class WebSpectreSpider(scrapy.Spider):
     name = "webspectre"
@@ -10,24 +10,15 @@ class WebSpectreSpider(scrapy.Spider):
     selector_list = []
 
     def start_requests(self):
-        # Get the URL from the command line
-        # If no URL is provided, use Google
-        # loop to ask user again until they provide a url which includes the scheme
-        while True:
-            url = input("Enter a URL: ") or "https://www.google.com"
-            if url.startswith("http://") or url.startswith("https://"):
-                break
-            print("Please enter a URL which includes the scheme (http:// or https://)")
-        print("You entered:", url)
-
         # yield scrapy.Request(url=url, callback=self.parse)
-        yield scrapy.Request(url=url, callback=self.parse)
+        yield scrapy.Request(url=a.baseURL, callback=self.parse)
 
     def parse(self, response):
         
         # create a Selector object from the response body
+        global html_selector
         html_selector = scrapy.Selector(response=response, type="html")
-        webspectre_selector_list = html_selector
+        print("Type (app.py) :::: ", html_selector)
         
         # output raw html to text file
         with open("outputs/raw.html", "w+") as f:
@@ -81,7 +72,7 @@ class WebSpectreSpider(scrapy.Spider):
             flags=response.flags,
         )
         self.selector_list = html_selector
-        return http_response
+        # return http_response
     
     # wait 5 seconds before closing the spider
     custom_settings = {

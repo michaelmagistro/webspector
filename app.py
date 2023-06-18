@@ -1,36 +1,48 @@
 from datetime import date
-from flask import Flask, render_template, request
-from globals import webspectre_selector_list
+from flask import Flask , render_template, jsonify, request, redirect, url_for
 from scrapy.crawler import CrawlerRunner
 from scrapy.utils.log import configure_logging
-from scrapy.utils.project import get_project_settings
-from twisted.internet import reactor
-from twisted.internet.task import deferLater
 from webspectre import WebSpectreSpider
-
+import webspectre as ws
+import crochet
+crochet.setup()
+from scrapy import signals
+from scrapy.signalmanager import dispatcher
+import time
 
 app = Flask(__name__)
+output_data = []
+crawl_runner = CrawlerRunner()
+baseURL = ""
 
 @app.route('/')
 def index():
     return render_template('index.html')
 
+
 @app.route('/run-scraper', methods=['POST'])
 def run_scraper():
-    runner = CrawlerRunner()
     configure_logging({"LOG_FORMAT": "%(levelname)s: %(message)s"})
-    d = runner.crawl(WebSpectreSpider)
-    d.addBoth(lambda _: reactor.stop()) # noqa
-    reactor.run()  # the script will block here until the crawling is finished # noqa
-    
-    
-    print(type(webspectre_selector_list))
-    print(webspectre_selector_list)
-    current_date = date.today()
-    url = request.form['url']
-    # print("Selector List Type: ",type(WebSpectreSpider.selector_list))
-    # subprocess.run(['python', 'webspectre.py', url])
-    return render_template('run-scraper.html', current_date=current_date, url=url)
+    s = request.form['url']
+    global baseURL
+    baseURL = s
+
+    print("URL:", baseURL)
+
+    scrape_with_crochet(baseURL=baseURL)
+    time.sleep(3)
+    print("Type (app.py) :::: ", ws.html_selector)
+    unique_tags = ws.get_unique_tags_count(ws.html_selector)
+    return render_template('run-scraper.html', url=baseURL, unique_tags=unique_tags)
+
+@crochet.run_in_reactor
+def scrape_with_crochet(baseURL):
+    dispatcher.connect(_crawler_result, signal=signals.item_scraped)
+    eventual = crawl_runner.crawl(WebSpectreSpider, baseURL=baseURL)
+    return eventual
+
+def _crawler_result(item, response, spider):
+    output_data.append(dict(item))
 
 if __name__ == '__main__':
     app.run()
