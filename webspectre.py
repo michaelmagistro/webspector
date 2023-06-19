@@ -69,7 +69,7 @@ class WebSpectreSpider(scrapy.Spider):
             flags=response.flags,
         )
         self.selector_list = html_selector
-        # return http_response
+        return http_response
     
     # wait 5 seconds before closing the spider
     custom_settings = {
