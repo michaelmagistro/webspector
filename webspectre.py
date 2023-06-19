@@ -2,24 +2,21 @@ from general_utils import get_sum
 from xpath_utils import get_full_xpath_list, get_max_depth, get_unique_tags_count
 import scrapy
 from scrapy.http import HtmlResponse
-import app as a
+from shared_vars import SharedVars
 
 class WebSpectreSpider(scrapy.Spider):
     name = "webspectre"
-    # set selector list attribute to empty list
     selector_list = []
 
     def start_requests(self):
-        # yield scrapy.Request(url=url, callback=self.parse)
-        yield scrapy.Request(url=a.baseURL, callback=self.parse)
+        yield scrapy.Request(url=SharedVars.baseURL, callback=self.parse)
 
     def parse(self, response):
-        
-        # create a Selector object from the response body
-        global html_selector
         html_selector = scrapy.Selector(response=response, type="html")
-        print("Type (app.py) :::: ", html_selector)
-        
+        SharedVars.html_selector = html_selector
+        print("Type (app.py) :::: ", SharedVars.html_selector)
+
+
         # output raw html to text file
         with open("outputs/raw.html", "w+") as f:
             f.write(response.body.decode("utf-8"))
