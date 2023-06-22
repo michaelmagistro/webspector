@@ -10,9 +10,11 @@
     <!-- return the url the user inputted from the index page -->
     <p>You entered the url: {{ url }}</p>
     <p>Showcase: Python, Flask, Matplotlib, Plotly, HTML, CSS, GIT</p>
-    <table>
-        <thead>
+    <table style="width: 100%;">
+        <thead style="width: 100%;">
             <tr>
+                <th style="width: 50%;"><div>HTML Tags Breakdown: Plotly Pie Chart</div></th>
+                <th style="width: 50%;"><div>Top 10 Tags: HTML Table via Python Loop</div></th>
             </tr>
         </thead>
         <tbody>
@@ -20,11 +22,11 @@
                 <!-- plotly graph -->
                 <td><div id="tagsBreakdown" style="text-align: left">{{ plotly_chart | safe }}</div></td>
                 <td>
-                    <table>
+                    <table style="width: 100%; border-collapse: collapse;">
                         <thead>
                         </thead>
                         <tbody>
-                            <table style="border-collapse: collapse;">
+                            <table style="width: 100%; border-collapse: collapse;">
                                 <thead>
                                     <tr>
                                         <th style="border: 1px solid black; padding-left: 5px; padding-right: 5px;">Tag</th>
