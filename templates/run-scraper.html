@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>Scraper</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 </head>
 <body>
     Click <a href="{{ url_for('index') }}">here</a> to go back.
@@ -20,6 +21,10 @@
             </tr>
         </tbody>
     </table>
-    
+    <div>
+        <h2>Breakdown of Elements</h2>
+        <!-- plotly graph -->
+        <div id="tagsBreakdown">{{ plotly_chart | safe }}</div>
+    </div>
 </body>
 </html>

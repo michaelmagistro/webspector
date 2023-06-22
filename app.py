@@ -11,6 +11,13 @@ import time
 from shared_vars import SharedVars
 import xpath_utils as xpu
 import general_utils as gu
+import matplotlib.pyplot as plt
+import plotly.graph_objects as go
+import plotly.figure_factory as ff
+from plotly.offline import plot
+import plotly.express as px
+import pandas as pd
+
 
 app = Flask(__name__)
 output_data = []
@@ -30,9 +37,21 @@ def run_scraper():
 
     scrape_with_crochet(baseURL=SharedVars.baseURL)
     time.sleep(3)
+    
     print("Type (app.py) :::: ", SharedVars.html_selector)
+
+    # get the unique tags and counts
     unique_tags = xpu.get_unique_tags_count(SharedVars.html_selector)
-    return render_template('run-scraper.html', url=SharedVars.baseURL, unique_tags=unique_tags)
+
+    # Pie chart of the HTML tags and counts, where the slices will be ordered and plotted counter-clockwise:
+    tags_labels = unique_tags.keys()
+    tags_sizes = unique_tags.values()
+    fig = px.pie(values=tags_sizes, names=tags_labels, title='Unique Tags by Count')
+    plotly_chart = plot(fig, output_type='div', include_plotlyjs=False)
+
+    return render_template('run-scraper.html', url=SharedVars.baseURL, unique_tags=unique_tags, plotly_chart=plotly_chart)
+
+
 
 @crochet.run_in_reactor
 def scrape_with_crochet(baseURL):
