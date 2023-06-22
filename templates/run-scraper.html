@@ -9,22 +9,44 @@
     <p>Today's date is {{ current_date }}</p>
     <!-- return the url the user inputted from the index page -->
     <p>You entered the url: {{ url }}</p>
+    <p>Showcase: Python, Flask, Matplotlib, Plotly, HTML, CSS, GIT</p>
     <table>
         <thead>
             <tr>
-                <th>Total Elements / Xpaths</th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td>{{ unique_tags }}</td>
+                <!-- plotly graph -->
+                <td><div id="tagsBreakdown" style="text-align: left">{{ plotly_chart | safe }}</div></td>
+                <td>
+                    <table>
+                        <thead>
+                        </thead>
+                        <tbody>
+                            <table style="border-collapse: collapse;">
+                                <thead>
+                                    <tr>
+                                        <th style="border: 1px solid black; padding-left: 5px; padding-right: 5px;">Tag</th>
+                                        <th style="border: 1px solid black; padding-left: 5px; padding-right: 5px;">Count</th>
+                                        <th style="border: 1px solid black; padding-left: 5px; padding-right: 5px;">%</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for tags in unique_tags_ordered[:10] %}
+                                        <tr>
+                                            <td style="border: 1px solid black; padding-left: 5px; padding-right: 5px;">{{ tags[0] }}</td>
+                                            <td style="border: 1px solid black; padding-left: 5px; padding-right: 5px;">{{ tags[1] }}</td>
+                                            <td style="border: 1px solid black; padding-left: 5px; padding-right: 5px;">{{ (tags[1]/total_unique_tags*100)|round(2) }}%</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </tbody>
+                    </table>
+                </td>
             </tr>
         </tbody>
     </table>
-    <div>
-        <h2>Breakdown of Elements</h2>
-        <!-- plotly graph -->
-        <div id="tagsBreakdown">{{ plotly_chart | safe }}</div>
-    </div>
 </body>
 </html>

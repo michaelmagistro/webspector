@@ -16,7 +16,7 @@ import plotly.graph_objects as go
 import plotly.figure_factory as ff
 from plotly.offline import plot
 import plotly.express as px
-import pandas as pd
+import pandas as pd # needed for plotly
 
 
 app = Flask(__name__)
@@ -47,9 +47,29 @@ def run_scraper():
     tags_labels = unique_tags.keys()
     tags_sizes = unique_tags.values()
     fig = px.pie(values=tags_sizes, names=tags_labels, title='Unique Tags by Count')
+    fig.update_traces(textinfo='label')  # Set textinfo to display tag names
+    # set tooltip to include percentage
+    fig.update_traces(hovertemplate="%{label}: %{value} (%{percent})")
+    # modify legend to include counts
+    fig.update_layout(legend_title_text='Tags', title='HTML Tag Breakdown', xaxis_title='Tag', yaxis_title='Size', barmode='group')
     plotly_chart = plot(fig, output_type='div', include_plotlyjs=False)
 
-    return render_template('run-scraper.html', url=SharedVars.baseURL, unique_tags=unique_tags, plotly_chart=plotly_chart)
+    # convert the unique_tags dictionary to an array of arrays and order by count desc
+    unique_tags_ordered = [[k,v] for k,v in unique_tags.items()]
+    unique_tags_ordered.sort(key=lambda x: x[1], reverse=True)
+
+    # other variables
+    current_date = date.today() # get current date
+    total_unique_tags = len(unique_tags) # get total count of unique tags
+
+    return render_template('run-scraper.html',
+        url=SharedVars.baseURL,
+        unique_tags=unique_tags,
+        plotly_chart=plotly_chart,
+        unique_tags_ordered=unique_tags_ordered,
+        total_unique_tags=total_unique_tags,
+        current_date=current_date
+    )
 
 
 
