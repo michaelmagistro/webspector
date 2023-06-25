@@ -10,14 +10,17 @@ from scrapy.signalmanager import dispatcher
 import time
 from shared_vars import SharedVars
 import xpath_utils as xpu
-import general_utils as gu
+# import general_utils as gu
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 import plotly.figure_factory as ff
 from plotly.offline import plot
 import plotly.express as px
 import pandas as pd # needed for plotly
+import os
 
+print("debug test")
+print("debug test 2")
 
 app = Flask(__name__)
 output_data = []
@@ -30,8 +33,16 @@ def index():
 @app.route('/run-scraper', methods=['POST'])
 def run_scraper():
     configure_logging({"LOG_FORMAT": "%(levelname)s: %(message)s"})
+    # create outputs directory if it doesn't exist relative to the project directory
+    project_dir = os.path.dirname(os.path.abspath(__file__))
+    outputs_dir = os.path.join(project_dir, 'outputs')
+    if not os.path.exists(outputs_dir):
+        os.makedirs(outputs_dir)
+
+    # get the url from the form
     s = request.form['url']
     SharedVars.baseURL = s
+
 
     print("URL:", SharedVars.baseURL)
 
@@ -42,6 +53,9 @@ def run_scraper():
 
     # get the unique tags and counts
     unique_tags = xpu.get_unique_tags_count(SharedVars.html_selector)
+
+    # get the full xpath list
+    xpath_list = xpu.get_full_xpath_list(SharedVars.html_selector)
 
     # Pie chart of the HTML tags and counts, where the slices will be ordered and plotted counter-clockwise:
     tags_labels = unique_tags.keys()
@@ -54,6 +68,17 @@ def run_scraper():
     fig.update_layout(legend_title_text='Tags', title='HTML Tag Breakdown', xaxis_title='Tag', yaxis_title='Size', barmode='group')
     plotly_chart = plot(fig, output_type='div', include_plotlyjs=False)
 
+    # create a dataframe from the xpath_list
+    df = pd.DataFrame(xpath_list[1:], columns=xpath_list[0])
+    
+    # create a scatter plot of the number of occurrences of each tag against the line number
+    # convert the line number column to int
+    df['Line Number'] = df['Line Number'].astype(int)
+    # create a scatter plot
+    fig2 = px.scatter(df, x="Line Number", y="Name", title='Line Number vs Tag Name')
+    fig2.update_layout(legend_title_text='Tags', title='Line Number vs Tag Name', xaxis_title='Line Number', yaxis_title='Tag Name', barmode='group')
+    plotly_chart2 = plot(fig2, output_type='div', include_plotlyjs=False)
+
     # convert the unique_tags dictionary to an array of arrays and order by count desc
     unique_tags_ordered = [[k,v] for k,v in unique_tags.items()]
     unique_tags_ordered.sort(key=lambda x: x[1], reverse=True)
@@ -62,13 +87,16 @@ def run_scraper():
     current_date = date.today() # get current date
     total_unique_tags = len(unique_tags) # get total count of unique tags
 
+    # plot line numbers against the frequency of specific tags to identify any clustering patterns
+
     return render_template('run-scraper.html',
         url=SharedVars.baseURL,
         unique_tags=unique_tags,
         plotly_chart=plotly_chart,
         unique_tags_ordered=unique_tags_ordered,
         total_unique_tags=total_unique_tags,
-        current_date=current_date
+        current_date=current_date,
+        plotly_chart2=plotly_chart2,
     )
 
 

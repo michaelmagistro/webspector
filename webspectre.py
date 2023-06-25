@@ -14,9 +14,12 @@ class WebSpectreSpider(scrapy.Spider):
     def parse(self, response):
         html_selector = scrapy.Selector(response=response, type="html")
         SharedVars.html_selector = html_selector
-        print("Type (app.py) :::: ", SharedVars.html_selector)
 
-
+        # Write Various outputs to files for debugging purposes
+        # output html_selector to text file
+        with open("outputs/html_selector.txt", "w+") as f:
+            f.write(str(html_selector))
+        
         # output raw html to text file
         with open("outputs/raw.html", "w+") as f:
             f.write(response.body.decode("utf-8"))
@@ -34,18 +37,9 @@ class WebSpectreSpider(scrapy.Spider):
             f.write("<pre>" + response.body.decode("utf-8") + "</pre>\n")
             # write the html footer
             f.write("</body>\n</html>")
-
-        # call the get_unique_tags function and pass the html_selector object
-        print("Unique tags by count:\n", get_unique_tags_count(html_selector))
-        
-        # print the sum of the values in the unique_tags dictionary
-        print("Total number of tags:", get_sum(get_unique_tags_count(html_selector).values()))
-        
-        # print the max depth of the html tree
-        print("Max depth of the tree:", get_max_depth(html_selector))
         
         # output full xpath list to text file
-        with open("outputs/xpath_list.txt", "w") as f:
+        with open("outputs/full_xpath_list.txt", "w") as f:
             f.write(str(get_full_xpath_list(html_selector)))
         # output full xpath list to text file with line endings
         with open("outputs/xpath_list_line_endings.txt", "w") as f:
@@ -54,9 +48,6 @@ class WebSpectreSpider(scrapy.Spider):
         # output the url to text file
         with open("outputs/url.txt", "w") as f:
             f.write(response.url)
-
-        # extract data from the response
-        title = response.css("title::text").get()
 
         # create a new HtmlResponse object with the extracted data
         http_response = HtmlResponse(

@@ -50,5 +50,19 @@
             </tr>
         </tbody>
     </table>
+    <table style="width: 100%;">
+        <thead style="width: 100%;">
+            <tr>
+                <th style="width: 50%;"><div>Scatter Plot - Html Tags & Line Numbers</div></th>
+                <th style="width: 50%;"><div>HTML Tags & Line Numbers Table</div></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><div id="tagsScatterPLTY" style="text-align: left">{{ plotly_chart2 | safe }}</div></td>
+                <td><div id="tagsScatterMPL" style="text-align: left">{{ matplotlib_chart | safe }}</div></td>
+            </tr>
+        </tbody>
+    </table>
 </body>
 </html>

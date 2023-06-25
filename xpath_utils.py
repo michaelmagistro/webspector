@@ -1,6 +1,6 @@
 def get_full_xpath_list(html):
     # get the full xpath of each tag in the html tree
-    xpath_list = [['NAME','DEPTH','TEXT','XPATH','CLASS','ID']]
+    xpath_list = [['Line Number','Name','Depth','Text','Xpath','Class','ID']]
     i = 0
     for tag in html.xpath('//*'):
         # get the tag name
@@ -15,8 +15,10 @@ def get_full_xpath_list(html):
         class_name = tag.xpath('@class')
         # get the id of the tag if any
         id_name = tag.xpath('@id')
+        # get the line number of the tag
+        line_number = tag.root.sourceline
         # populate the list
-        xpath_list.append([tag_name, str(depth), text, class_name, id_name, xpath])
+        xpath_list.append([line_number, tag_name, str(depth), text, class_name, id_name, xpath])
         i += 1
     return xpath_list
 
@@ -47,3 +49,7 @@ def get_unique_tags_count(html):
         unique_tags[tag] = tags.count(tag)
 
     return unique_tags
+
+# convert the html page to plain text
+def html_to_text(html):
+    html = html.replace("<br>", "\n")
