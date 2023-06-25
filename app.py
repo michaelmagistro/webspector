@@ -65,19 +65,35 @@ def run_scraper():
     # set tooltip to include percentage
     fig.update_traces(hovertemplate="%{label}: %{value} (%{percent})")
     # modify legend to include counts
-    fig.update_layout(legend_title_text='Tags', title='HTML Tag Breakdown', xaxis_title='Tag', yaxis_title='Size', barmode='group')
-    plotly_chart = plot(fig, output_type='div', include_plotlyjs=False)
+    fig.update_layout(legend_title_text='Tags', title='HTML Tag Breakdown', xaxis_title='Tag', yaxis_title='Size', barmode='group', title_text=' ')
+    # hide legend on plotly figure
+    fig.update_layout(showlegend=False)
+    # hide overflow tooltip on pie chart
+    chart = plot(fig, output_type='div', include_plotlyjs=False)
+    plotly_chart = chart
 
     # create a dataframe from the xpath_list
     df = pd.DataFrame(xpath_list[1:], columns=xpath_list[0])
+
+    # create a histogram of the number of tags that occur on each line
+    # convert the line number column to int
+    df['Line Number'] = df['Line Number'].astype(int)
+    # create a histogram
+    fig = px.histogram(df, x="Line Number", title='Line Number vs Tag Count')
+    fig.update_layout(legend_title_text='Tags', title='Line Number vs Tag Count', xaxis_title='Line Number', yaxis_title='Tag Count', barmode='group', title_text='')
+    chart = plot(fig, output_type='div', include_plotlyjs=False)
+    plotly_hist_chart1 = chart
+
+    # create a histogram of the tag names and which row in the data frame they occur on
     
     # create a scatter plot of the number of occurrences of each tag against the line number
     # convert the line number column to int
     df['Line Number'] = df['Line Number'].astype(int)
     # create a scatter plot
-    fig2 = px.scatter(df, x="Line Number", y="Name", title='Line Number vs Tag Name')
-    fig2.update_layout(legend_title_text='Tags', title='Line Number vs Tag Name', xaxis_title='Line Number', yaxis_title='Tag Name', barmode='group')
-    plotly_chart2 = plot(fig2, output_type='div', include_plotlyjs=False)
+    fig = px.scatter(df, x="Line Number", y="Name", title='Line Number vs Tag Name')
+    fig.update_layout(legend_title_text='Tags', title='Line Number vs Tag Name', xaxis_title='Line Number', yaxis_title='Tag Name', barmode='group', title_text='')
+    chart = plot(fig, output_type='div', include_plotlyjs=False)
+    plotly_scatter = chart
 
     # convert the unique_tags dictionary to an array of arrays and order by count desc
     unique_tags_ordered = [[k,v] for k,v in unique_tags.items()]
@@ -87,7 +103,8 @@ def run_scraper():
     current_date = date.today() # get current date
     total_unique_tags = len(unique_tags) # get total count of unique tags
 
-    # plot line numbers against the frequency of specific tags to identify any clustering patterns
+    # print dataframe to csv
+    df.to_csv(os.path.join(outputs_dir, 'webspectre_output.csv'), index=False)
 
     return render_template('run-scraper.html',
         url=SharedVars.baseURL,
@@ -96,7 +113,8 @@ def run_scraper():
         unique_tags_ordered=unique_tags_ordered,
         total_unique_tags=total_unique_tags,
         current_date=current_date,
-        plotly_chart2=plotly_chart2,
+        plotly_scatter=plotly_scatter,
+        plotly_hist_chart1=plotly_hist_chart1
     )
 
 
