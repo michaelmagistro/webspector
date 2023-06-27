@@ -64,7 +64,7 @@ def run_scraper():
         textposition='inside',  # Show labels inside the pie slices
         hovertemplate="%{label}: %{value} (%{percent})"
     )
-    fig.update_layout(legend_title_text='Tags', title='HTML Tag Breakdown', xaxis_title='Tag', yaxis_title='Size', barmode='group', showlegend=False, title_text='', margin=dict(l=0, r=0, b=0, t=0, pad=1))
+    fig.update_layout(legend_title_text='Tags', title='HTML Tag Breakdown', xaxis_title='Tag', yaxis_title='Size', barmode='group', showlegend=False, title_text='', margin=dict(l=0, r=0, b=0, t=0, pad=1), height=200)
     # hide overflow tooltip on pie chart
     chart = plot(fig, output_type='div', include_plotlyjs=False)
     plotly_pie = chart

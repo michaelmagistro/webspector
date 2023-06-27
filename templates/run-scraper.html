@@ -5,11 +5,7 @@
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 </head>
 <body>
-    Click <a href="{{ url_for('index') }}">here</a> to go back.
-    <p>Today's date is {{ current_date }}</p>
-    <!-- return the url the user inputted from the index page -->
-    <p>You entered the url: {{ url }}</p>
-    <p>Showcase: Python, Flask, Plotly, HTML, CSS, GIT</p>
+    {{ current_date }} | <a href="{{ url_for('index') }}">Go Back</a> | You entered the url: {{ url }} | Showcase: Python, Flask, Plotly, HTML, CSS, GIT <br><br>
     <table style="width: 100%;">
         <thead style="width: 100%;">
             <tr>
