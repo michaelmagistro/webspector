@@ -11,7 +11,6 @@ import time
 from shared_vars import SharedVars
 import xpath_utils as xpu
 import general_utils as gu
-import plotly.graph_objects as go
 from plotly.offline import plot
 import plotly.express as px
 import pandas as pd # needed for plotly
@@ -59,16 +58,16 @@ def run_scraper():
     tags_labels = unique_tags.keys()
     tags_sizes = unique_tags.values()
     fig = px.pie(values=tags_sizes, names=tags_labels, title='Unique Tags by Count')
-    fig.update_traces(textinfo='label')  # Set textinfo to display tag names
-    # set tooltip to include percentage
-    fig.update_traces(hovertemplate="%{label}: %{value} (%{percent})")
-    # modify legend to include counts
-    fig.update_layout(legend_title_text='Tags', title='HTML Tag Breakdown', xaxis_title='Tag', yaxis_title='Size', barmode='group', title_text=' ')
-    # hide legend on plotly figure
-    fig.update_layout(showlegend=False)
+    # Customize label display
+    fig.update_traces(
+        textinfo='label',  # Hide percentage labels
+        textposition='inside',  # Show labels inside the pie slices
+        hovertemplate="%{label}: %{value} (%{percent})"
+    )
+    fig.update_layout(legend_title_text='Tags', title='HTML Tag Breakdown', xaxis_title='Tag', yaxis_title='Size', barmode='group', showlegend=False, title_text='', margin=dict(l=0, r=0, b=0, t=0, pad=1))
     # hide overflow tooltip on pie chart
     chart = plot(fig, output_type='div', include_plotlyjs=False)
-    plotly_chart = chart
+    plotly_pie = chart
 
     # create a dataframe from the xpath_list
     df = pd.DataFrame(xpath_list[1:], columns=xpath_list[0])
@@ -173,7 +172,7 @@ def run_scraper():
     return render_template('run-scraper.html',
         url=SharedVars.baseURL,
         unique_tags=unique_tags,
-        plotly_chart=plotly_chart,
+        plotly_chart=plotly_pie,
         unique_tags_ordered=unique_tags_ordered,
         total_unique_tags=total_unique_tags,
         current_date=current_date,
