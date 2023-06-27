@@ -10,7 +10,7 @@ from scrapy.signalmanager import dispatcher
 import time
 from shared_vars import SharedVars
 import xpath_utils as xpu
-# import general_utils as gu
+import general_utils as gu
 import plotly.graph_objects as go
 from plotly.offline import plot
 import plotly.express as px
@@ -96,31 +96,34 @@ def run_scraper():
 
     # Create a tree chart
     # create a list of dictionaries representing the HTML tree structure
-    tree_data = [{'label': tag.extract(), 'parent': '', 'value': 1} for tag in SharedVars.html_selector.xpath('//*')]
-    for i, node in enumerate(tree_data):
-        if i == 0:
-            continue
-        parent = tree_data[i-1]
-        if node['label'] in parent['label']:
-            node['parent'] = parent['label']
-            parent['value'] += 1
-    # create the Plotly figure
-    fig = go.Figure(go.Treemap(
-        labels=[node['label'] for node in tree_data],
-        parents=[node['parent'] for node in tree_data],
-        values=[node['value'] for node in tree_data],
-        textinfo='label+value',
-        hovertemplate='<b>%{label}</b><br>Count: %{value}<br>Parent: %{parent}<extra></extra>',
-    ))
-    # update the layout of the figure
-    fig.update_layout(
-        title='HTML Selector Tree',
-        title_x=0.5,
-        margin=dict(l=0, r=0, t=50, b=0),
-    )
-    # create a chart from the figure
-    chart = plot(fig, output_type='div', include_plotlyjs=False)
-    plotly_tree_chart = chart
+    # tree_data = [{'label': tag.extract(), 'parent': '', 'value': 1} for tag in SharedVars.html_selector.xpath('//*')]
+    # tree_data = gu.create_tree_data(SharedVars.html_selector)
+    # for i, node in enumerate(tree_data):
+    #     if i == 0:
+    #         continue
+    #     parent = tree_data[i-1]
+    #     if node['label'] in parent['label']:
+    #         node['parent'] = parent['label']
+    #         parent['value'] += 1
+    # # create the Plotly figure
+    # fig = go.Figure(go.Treemap(
+    #     labels=[node['label'] for node in tree_data],
+    #     parents=[node['parent'] for node in tree_data],
+    #     values=[node['value'] for node in tree_data],
+    #     textinfo='label+value',
+    #     hovertemplate='<b>%{label}</b><br>Count: %{value}<br>Parent: %{parent}<extra></extra>',
+    # ))
+    # # update the layout of the figure
+    # fig.update_layout(
+    #     title='HTML Selector Tree',
+    #     title_x=0.5,
+    #     margin=dict(l=0, r=0, t=50, b=0),
+    # )
+    # # create a chart from the figure
+    # chart = plot(fig, output_type='div', include_plotlyjs=False)
+    # plotly_tree_chart = chart
+
+    # Create a tree chart
 
     # #############################
 
@@ -176,7 +179,7 @@ def run_scraper():
         current_date=current_date,
         plotly_scatter=plotly_scatter,
         plotly_hist_chart1=plotly_hist_chart1,
-        plotly_tree_chart=plotly_tree_chart,
+        # plotly_tree_chart=plotly_tree_chart,
         plotly_tree_chart_example=plotly_tree_chart_example
     )
 
