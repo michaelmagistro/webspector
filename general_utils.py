@@ -14,20 +14,30 @@ def html_to_text(html):
 
 def create_tree_data(html_selector):
     tree_data = []
+    node_id = 0
 
-    def traverse_tree(node, parent_label):
-        label = node.xpath('string(.)').strip()
+    def traverse_tree(node, parent_label, parent_id):
+        nonlocal node_id
+
+        # label = node.xpath('string(.)').strip()
+        # get the html tag name
+        label = node.tag
         children = node.xpath('./*')
 
-        if parent_label:
-            tree_data.append({'label': label, 'parent': parent_label, 'value': 1})
-        else:
-            tree_data.append({'label': label, 'parent': '', 'value': 1})
+        node_id += 1
+        current_id = node_id
+
+        tree_data.append({'node_id': current_id, 'parent_id': parent_id, 'label': label, 'parent_label': parent_label, 'value': 1})
 
         for child in children:
-            traverse_tree(child, label)
+            traverse_tree(child, label, current_id)
 
-    traverse_tree(html_selector.root, '')
+    # Assign a unique parent ID for the top-level node
+    top_level_id = 'root'
+
+    traverse_tree(html_selector.root, '', top_level_id)
+
     return tree_data
+
 
 

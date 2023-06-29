@@ -15,6 +15,7 @@ from plotly.offline import plot
 import plotly.express as px
 import pandas as pd # needed for plotly
 import os
+import plotly.graph_objects as go
 
 print("debug test")
 print("debug test 2")
@@ -93,65 +94,35 @@ def run_scraper():
     
     # #############################
 
-    # Create a tree chart
-    # create a list of dictionaries representing the HTML tree structure
-    # tree_data = [{'label': tag.extract(), 'parent': '', 'value': 1} for tag in SharedVars.html_selector.xpath('//*')]
-    # tree_data = gu.create_tree_data(SharedVars.html_selector)
-    # for i, node in enumerate(tree_data):
-    #     if i == 0:
-    #         continue
-    #     parent = tree_data[i-1]
-    #     if node['label'] in parent['label']:
-    #         node['parent'] = parent['label']
-    #         parent['value'] += 1
-    # # create the Plotly figure
-    # fig = go.Figure(go.Treemap(
-    #     labels=[node['label'] for node in tree_data],
-    #     parents=[node['parent'] for node in tree_data],
-    #     values=[node['value'] for node in tree_data],
-    #     textinfo='label+value',
-    #     hovertemplate='<b>%{label}</b><br>Count: %{value}<br>Parent: %{parent}<extra></extra>',
-    # ))
-    # # update the layout of the figure
-    # fig.update_layout(
-    #     title='HTML Selector Tree',
-    #     title_x=0.5,
-    #     margin=dict(l=0, r=0, t=50, b=0),
-    # )
-    # # create a chart from the figure
-    # chart = plot(fig, output_type='div', include_plotlyjs=False)
-    # plotly_tree_chart = chart
-
-    # Create a tree chart
-
-    # #############################
-
-
-
-    # ################################################# TESTING
-    # test treemap
+    # HTML Selector Tree
     # Create a list of dictionaries representing the tree structure
-    # tree_data = [{'label': 'Root', 'value': 100}, {'label': 'Node 1', 'value': 50}, {'label': 'Node 2', 'value': 25}, {'label': 'Node 3', 'value': 12.5}, {'label': 'Node 4', 'value': 6.25}]
-    # # Create the Plotly figure
-    # fig = px.treemap(tree_data, values='value', labels='label')
-    # # Update the layout of the figure
-    # fig.update_layout(
-    #     title='Treemap Example',
-    #     title_x=0.5,
-    #     margin=dict(l=0, r=0, t=50, b=0),
-    # )
-    # chart = plot(fig, output_type='div', include_plotlyjs=False)
-    # plotly_tree_chart_example = chart
-
-    tree_data = [{'label': 'Root', 'value': 100}, {'label': 'Node 1', 'value': 50}, {'label': 'Node 2', 'value': 25}, {'label': 'Node 3', 'value': 12.5}, {'label': 'Node 4', 'value': 6.25}]
-
-    fig = px.treemap(tree_data, values='value', labels='label')
+    # Create a tree chart
+    tree_data = gu.create_tree_data(SharedVars.html_selector)
+    # Create the Plotly Express figure
+    fig = px.treemap(
+    tree_data,
+        names=[str(node['node_id']) for node in tree_data],
+        parents=[str(node['parent_id']) for node in tree_data],
+        values=[node['value'] for node in tree_data],
+        labels=[node['label'] for node in tree_data],
+        title='HTML Selector Tree',
+    )
+    # Update the layout of the figure
     fig.update_layout(
-        title='Treemap Example',
-        title_x=0.5,
         margin=dict(l=0, r=0, t=50, b=0),
     )
+    # Create a chart from the figure
+    chart = fig.to_html(full_html=False)
+    plotly_tree_chart = chart
 
+    # ################################################# TESTING
+
+    fig = px.treemap(
+    names = ["Eve","Cain", "Seth", "Enos", "Noam", "Abel", "Awan", "Enoch", "Azura"],
+    parents = ["", "Eve", "Eve", "Seth", "Seth", "Eve", "Eve", "Awan", "Eve"]
+    )
+    fig.update_traces(root_color="lightgrey")
+    fig.update_layout(margin = dict(t=50, l=25, r=25, b=25))
     chart = plot(fig, output_type='div', include_plotlyjs=False)
     plotly_tree_chart_example = chart
 
@@ -178,7 +149,7 @@ def run_scraper():
         current_date=current_date,
         plotly_scatter=plotly_scatter,
         plotly_hist_chart1=plotly_hist_chart1,
-        # plotly_tree_chart=plotly_tree_chart,
+        plotly_tree_chart=plotly_tree_chart,
         plotly_tree_chart_example=plotly_tree_chart_example
     )
 

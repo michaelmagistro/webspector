@@ -10,7 +10,7 @@
         <thead style="width: 100%;">
             <tr>
                 <th style="width: 33%;"><div>Plotly Pie Chart: Breakdown of HTML Tags</div></th>
-                <th style="width: 33%;"><div>HTML Table via Python Loop: Top 10 HTML Tags</div></th>
+                <th style="width: 33%;"><div>Plotly Tree Map: HTML hierarchy</div></th>
                 <th style="width: 33%;"><div>HTML Table via Python Loop: Top 10 HTML Tags</div></th>
             </tr>
         </thead>
@@ -18,7 +18,7 @@
             <tr>
                 <!-- plotly graph -->
                 <td>{{ plotly_chart | safe }}</td>
-                <td></td>
+                <td>{{ plotly_tree_chart | safe }}</td>
                 <td>
                     <table style="width: 100%; border-collapse: collapse;">
                         <thead>
