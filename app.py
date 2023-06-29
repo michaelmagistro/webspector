@@ -15,7 +15,6 @@ from plotly.offline import plot
 import plotly.express as px
 import pandas as pd # needed for plotly
 import os
-import plotly.graph_objects as go
 
 print("debug test")
 print("debug test 2")
@@ -107,6 +106,7 @@ def run_scraper():
         labels=[node['label'] for node in tree_data],
         title='HTML Selector Tree',
     )
+
     # Update the layout of the figure
     fig.update_layout(
         margin=dict(l=0, r=0, t=50, b=0),
